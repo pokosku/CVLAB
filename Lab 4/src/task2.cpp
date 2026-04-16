@@ -10,7 +10,7 @@ void draw_lane_area(Mat src, vector<Vec2f> lane){
     float rho1 = lane[0][0], theta1 = lane[0][1];
     float rho2 = lane[1][0], theta2 = lane[1][1];
 
-    Mat A = Mat({1,2}, {1,2});
+    Mat A = Mat([cos(theta1), sin(theta2)], {1,2});
 }
 
 int main(int argc, char** argv){
