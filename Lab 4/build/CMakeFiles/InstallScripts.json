@@ -1,7 +1,7 @@
 {
 	"InstallScripts" : 
 	[
-		"/Users/leonardofabbro/Documents/Lab/Lab 4/build/cmake_install.cmake"
+		"/home/leo/Documents/CV/CVLAB/Lab 4/build/cmake_install.cmake"
 	],
 	"Parallel" : false
 }
