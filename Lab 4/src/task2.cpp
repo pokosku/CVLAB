@@ -67,7 +67,7 @@ int main(int argc, char** argv){
     
 
     cvtColor(src, src_gray, COLOR_BGR2GRAY); 
-    threshold(src_gray,src_gray, 200, 255, THRESH_BINARY);
+    // threshold(src_gray,src_gray, 200, 255, THRESH_BINARY);
     GaussianBlur(src_gray, detected_edges, Size(3,3), 0);
 
     vector<Point> pts = {Point(0.2*src.cols, src.rows -1), Point(src.cols/2,src.rows/2), Point(0.8*src.cols, src.rows -1)};
