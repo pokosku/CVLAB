@@ -9,6 +9,7 @@ using namespace std;
 
 string window_name = "Edges";
 
+
 Mat define_roi(Mat src, vector<Point> pts){
     // pts wrt y coordinates
     Mat mask = Mat::zeros(Size(src.cols, src.rows), CV_8UC1);
@@ -27,21 +28,19 @@ vector<Vec2f> select_lines(vector<Vec2f> houghlines){
     vector<Vec2f> selected_lines;
     selected_lines.push_back(houghlines.at(0));
     
+    Vec2f left_line(0,0), right_line(0,0);
     
-    int i = 0;
+    int counter = 1;
     
 
     double theta1 = selected_lines[0][1];
 
+    double tol = CV_PI/4;
     // best possible candidate by opposite orientation
-    while (selected_lines.size() < 2){
-        if (houghlines[i][0] < 0){
-            selected_lines.push_back(houghlines.at(i));
-            break;
-        }
-        i++;
-    }
-
+    for(int i = 0; (i < houghlines.size()) and (selected_lines.size() < 2); i++){
+        theta = houghlines[i][1]
+        if(houghlines[i][1] )
+    } 
     return selected_lines;
 
 }
@@ -67,10 +66,11 @@ int main(int argc, char** argv){
     
 
     cvtColor(src, src_gray, COLOR_BGR2GRAY); 
-    // threshold(src_gray,src_gray, 200, 255, THRESH_BINARY);
+    threshold(src_gray,src_gray, 200, 255, THRESH_BINARY);
     GaussianBlur(src_gray, detected_edges, Size(3,3), 0);
 
-    vector<Point> pts = {Point(0.2*src.cols, src.rows -1), Point(src.cols/2,src.rows/2), Point(0.8*src.cols, src.rows -1)};
+
+    vector<Point> pts = {Point(0.2*src.cols, src.rows -1), Point(0.45*src.cols, 0.5* src.rows), Point(0.55*src.cols, 0.5*src.rows), Point(0.8*src.cols, src.rows -1)};
 
     
 
@@ -97,6 +97,7 @@ int main(int argc, char** argv){
         float rho = lines[i][0], theta = lines[i][1];
         Point pt1, pt2;
         double a = cos(theta), b = sin(theta);
+        rho = abs(rho);
         double x0 = a*rho, y0 = b*rho;
         pt1.x = cvRound(x0 + 1000*(-b));
         pt1.y = cvRound(y0 + 1000*(a));
