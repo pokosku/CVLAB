@@ -26,21 +26,35 @@ Mat define_roi(Mat src, vector<Point> pts){
 
 vector<Vec2f> select_lines(vector<Vec2f> houghlines){
     vector<Vec2f> selected_lines;
-    selected_lines.push_back(houghlines.at(0));
     
     Vec2f left_line(0,0), right_line(0,0);
     
-    int counter = 1;
+    bool left_chosen = false;
+    bool right_chosen = false;
     
 
-    double theta1 = selected_lines[0][1];
-
-    double tol = CV_PI/4;
+    
     // best possible candidate by opposite orientation
-    for(int i = 0; (i < houghlines.size()) and (selected_lines.size() < 2); i++){
-        theta = houghlines[i][1]
-        if(houghlines[i][1] )
+    for(int i = 0; (i < houghlines.size()); i++){
+        Vec2f line = houghlines.at(i);
+        double theta = houghlines[i][1];
+        cout << line << endl;
+        if(!left_chosen and ((theta > (CV_PI/6)) and (theta < (CV_PI/3)))){
+            left_line = line;
+            left_chosen = true;
+        }else if(!right_chosen and ((theta > (2*CV_PI/3)) and (theta < (5*CV_PI/6)))){
+            right_line = line;
+            right_chosen = true;
+        }
+
+        if(left_chosen && right_chosen)
+            break;
     } 
+
+
+    selected_lines.push_back(left_line);
+    selected_lines.push_back(right_line);
+
     return selected_lines;
 
 }
@@ -70,7 +84,7 @@ int main(int argc, char** argv){
     GaussianBlur(src_gray, detected_edges, Size(3,3), 0);
 
 
-    vector<Point> pts = {Point(0.2*src.cols, src.rows -1), Point(0.45*src.cols, 0.5* src.rows), Point(0.55*src.cols, 0.5*src.rows), Point(0.8*src.cols, src.rows -1)};
+    vector<Point> pts = {Point(0.15*src.cols, src.rows -1), Point(0.45*src.cols, 0.5* src.rows), Point(0.55*src.cols, 0.5*src.rows), Point(0.85*src.cols, src.rows -1)};
 
     
 
@@ -87,29 +101,28 @@ int main(int argc, char** argv){
 
 
     vector<Vec2f> lines;
-    HoughLines(restricted_edges, lines, 1, CV_PI/180, 100, 0, 0);
+    HoughLines(restricted_edges, lines, 1, CV_PI/180, 50, 0, 0);
     
     vector<Vec2f> best_lines = select_lines(lines);
     
 
     for( size_t i = 0; i < best_lines.size(); i++ )
     {
-        float rho = lines[i][0], theta = lines[i][1];
+        cout << best_lines.at(i) << endl;
+        float rho = best_lines[i][0], theta = best_lines[i][1];
         Point pt1, pt2;
         double a = cos(theta), b = sin(theta);
-        rho = abs(rho);
         double x0 = a*rho, y0 = b*rho;
         pt1.x = cvRound(x0 + 1000*(-b));
         pt1.y = cvRound(y0 + 1000*(a));
         pt2.x = cvRound(x0 - 1000*(-b));
         pt2.y = cvRound(y0 - 1000*(a));
-        line( src, pt1, pt2, Scalar(0,0,255), 3, LINE_AA);
+        line( src, pt1, pt2, Scalar(0,0,255), 1, LINE_AA);
     }
 
     imshow(window_name, src);
     waitKey(0);
 
-    cout << best_lines[0] << endl << best_lines[1] << endl;
     
     return 0;
 }
