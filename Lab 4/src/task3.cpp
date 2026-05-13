@@ -35,13 +35,14 @@ static void houghcircle_params(int, void*){
 
     if(circles.empty()){
         cerr << "No circles found" << endl;
+        imshow(hough_window, display);
         return;
     }
 
     for (auto &c : circles){
         cout << c<< endl;
         double x = c[0], y = c[1], radius = c[2];
-        circle(display, Point(x, y), radius, Scalar(0,255,0), 2);
+        circle(display, Point(x, y), radius, Scalar(0,255,0), FILLED);
     }
 
     imshow(hough_window, display);
